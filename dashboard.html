@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="assets/images/fav.png">
+    <title>DOM Parameter Finder</title>
+  </head>
+  <script src="assets/js/beautify.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/modal.css">
+  <link rel="stylesheet" href="assets/css/js_crawler_modal.css">
+  <body>
+
+    <script src="assets/js/helpers.js"></script>
+    <script src="assets/js/jquery.js"></script>
+    <div class="container">
+      <div class="main_dashboard">
+        <div class="input-group">
+          <input type="text" id="urlInput" placeholder="Enter URL..." />
+          <button id="addUrlBtn">Add</button>
+        </div>
+
+        <h1>🔍 URLs List</h1>
+        <ul id="urlList"></ul>
+        <div id="added_url"></div>
+        <div id="data"></div>
+
+        <script src="/assets/js/addurl.js"></script>
+
+      </div>
+      <div class="url_dashboard">
+        <div class="input-group">
+          <div style="display:flex; justify-content: space-between; align-items: center;">
+            <span class="backBtn">Back</span>
+            <span class="recycleBtn" title="Remove url and all founded parameters"></span>
+          </div>
+          <div class="attribute-list">
+            <div class="attribute" style="padding-bottom: 7px;">
+              <label class="switch">
+                <input type="checkbox" name="all" id="all">
+                <span class="slider"></span>
+              </label>
+              Select ALL
+            </div>
+            <div class="attribute" style="padding-bottom: 7px;">
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="id" id="id">
+                <span class="slider"></span>
+              </label>
+              id attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="class" id="class">
+                <span class="slider"></span>
+              </label>
+              class attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="name" id="name">
+                <span class="slider"></span>
+              </label>
+              name attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="href" id="href">
+                <span class="slider"></span>
+              </label>
+              href attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="src" id="src">
+                <span class="slider"></span>
+              </label>
+              src attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="js_inline" id="js_inline">
+                <span class="slider"></span>
+              </label>
+              Inline Javascript
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="json" id="json">
+                <span class="slider"></span>
+              </label>
+              JSON keys
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="url" id="url">
+                <span class="slider"></span>
+              </label>
+              URL parameters
+            </div>
+          </div>
+          <div style="border-top: 1px solid #dedede; padding-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="js_crawler" id="js_crawler">
+                <span class="slider"></span>
+              </label>
+              <span id="found_js_files_count">
+                Javascript files crawler (0 file(s))
+              </span>
+            </div>
+            <div class="js_crawler_settings"></div>
+          </div>
+          <button id="addBtn">Save</button>
+        </div>
+
+        <ul id="keywordList"></ul>
+
+        <h1 id="discovered_parameters_header">🔍 Discovered Parameters <span id="addCustomParameterBtn">+</span></h1>
+        <div id="urlLabel"></div>
+        <div id="data"></div>
+
+
+        <div class="pagination">
+  
+        </div>
+        <button id="removeAllBtn">Remove all</button>
+        <button id="urlQueryGenBtn">Generate URL Query</button>
+        <button id="copyAllBtn">Copy all to clipboard</button>
+
+
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModalBtn" class="close-btn">&times;</span>
+        <h2 style="margin-top: 10px;">Advanced options</h2>
+        <label style="margin-top: 10px;">
+          <span>Fixed part:</span>
+          <input type="text" id="fixed-part" placeholder="XXXXX" value="XXXXX" />
+        </label>
+        <label style="margin-top: 10px;">
+          <span>Chunk:</span>
+          <input type="text" id="chunk-number" placeholder="20" value="20" />
+        </label>
+        <label style="margin-top: 10px; margin-bottom: 10px;">
+          <span style="flex: 1;">URL Encoding:</span>
+          <div style="flex: 1; display: flex; justify-content: end; margin-right: 10px;">
+            <input style="width: auto;" type="checkbox" id="urlencode-chbox" checked="1" />
+          </div>
+        </label>
+        <label style="margin-top: 10px; margin-bottom: 10px;">
+          <span style="flex: 1;">Use top XSS parameters: <a target="_blank" href="https://github.com/lutfumertceylan/top25-parameter">[GitHub]</a></span>
+          <div style="flex: 1; display: flex; justify-content: end; margin-right: 10px;">
+            <input style="width: auto;" type="checkbox" id="topxss-chbox" />
+          </div>
+        </label>
+        <button id="urlQueryReGenBtn">reGenerate</button>
+        <textarea readonly name="output" id="output"></textarea>
+
+        <span id="openBtn">open</span>
+        <span id="copyBtn">copy</span>
+        <div class="info-bar">
+          <span class="links-number">20 links</span>
+        </div>
+      </div>
+    </div>
+
+
+      <!-- The Modal -->
+      <div id="jsCrawlerModal" class="jsModal">
+        <!-- Modal content -->
+        <div class="jsModal-content">
+          <span class="jsModal-close">&times;</span>
+          <div class="jsModal-body">
+            <div>
+              <h2>Javascript links</h2>
+              <div class="js_link_container">
+                
+              </div>
+              <div class="js_numbers">
+                <span class="links_number">0 javascript links</span>
+                <span class="delimited">|</span>
+                <span class="selected_number">0 links selected</span>
+                <span class="select_all_links_btn">Select None</span>
+              </div>
+            </div>
+            <div>
+              <h2 style="margin-top: 12px;">Crawler options</h2>
+              <div class="crawler-options">
+                <div class="crawler-option">
+                  <label for="crawl_strings">Strings values</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_strings" id="crawl_strings">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_varnames">Variables names</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_varnames" id="crawl_varnames">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_parameters">URL parameters</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_parameters" id="crawl_parameters">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_curlybraces">Curly brace values</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_curlybraces" id="crawl_curlybraces">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_objectkeys">Objects keys</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_objectkeys" id="crawl_objectkeys">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_parentheses">Parentheses values</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_parentheses" id="crawl_parentheses">
+                </div>
+              </div>
+              <div class="crawler-options regex-filter">
+                <h3>Custom Regex Filter: </h3>
+                <div class="custom-regexes">
+                  
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 5px; display: flex;">
+              <button class="crawl_btn">Crawl</button>
+            </div>
+            <div class="crawl_progress_container" style="margin-top: 5px; display: none;">
+              <div class="crawl_progress_bar"></div>
+            </div>
+            <div class="output_div" style="margin-top: 5px; display: flex;">
+              <textarea spellcheck="false" name="output" id="js_crawler_output"></textarea>
+            </div>
+            <div class="crawl_words_count" style="margin-top: 3px; font-size: 12px; color: #555;">0 words found</div>
+            <div style="margin-top: 5px; display: flex;">
+              <button id="add_crawled_to_target_btn">Add to target words</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <script src="assets/js/modal.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/addkeywords.js"></script>
+    <script src="assets/js/js_parameter_finder.js"></script>
+    <script src="assets/js/js_crawler_modal.js"></script>
+    <script src="assets/js/dash_checker.js"></script>
+</body>
+</html>

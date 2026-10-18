@@ -1,0 +1,110 @@
+function notifyBar(message) {
+  if(! $('.alert-box').length) {
+    $(`<div class="alert-box success" >${message}</div>`).prependTo('body').delay(1300).fadeOut(500, function() {
+        $('.alert-box').remove();
+    });
+  };
+};
+
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+function getURLFactors(url, callback) {
+  chrome.storage.local.get("url_factors", (data) => {
+    const allFactors = data.url_factors || {};
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
+      const urlData = allFactors[url] || null;
+  
+      callback(urlData);
+    })
+  });
+}
+
+function storeURLFactors(url, factors) {
+  chrome.storage.local.get("url_factors", (data) => {
+    const allFactors = data.url_factors || {};
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
+      allFactors[url] = {
+        id: factors.id,
+        class: factors.class,
+        name: factors.name,
+        href: factors.href,
+        src: factors.src,
+        js_inline: factors.js_inline,
+        json: factors.json,
+        url: factors.url,
+        js_crawler: factors.js_crawler
+      };
+  
+      chrome.storage.local.set({ url_factors: allFactors }, () => {
+        console.log(`Factors for ${url} saved.`);
+      });
+    })
+  });
+  notifyBar("Done.")
+}
+
+function extractParamNames(jsCode) {
+  const wordList = ["phone","phone_number","token","session","user_id","api_key","amount"];
+  const found = new Set();
+  const regex = /\b([a-zA-Z_][a-zA-Z0-9_]{2,})\s*[:=]\s*/g;
+  let match;
+  while ((match = regex.exec(jsCode)) !== null) {
+    const name = match[1];
+    if (wordList.includes(name.toLowerCase())) {
+      found.add(name);
+    }
+  }
+  return Array.from(found);
+}
+
+
+function wildcardMatch(pattern, str, returnValue = false) {
+  const escaped = pattern.replace(/[-/\\^$+?.()|[\]{}]/g, '\\$&');
+  const regexPattern = '^' + escaped.replace(/\*/g, '.*') + '$';
+  const regex = new RegExp(regexPattern);
+  const matched = regex.test(str);
+
+  if (returnValue) {
+    return matched ? pattern : false;
+  } else {
+    return matched;
+  }
+}
+
+function matchAnyPattern(patterns, str, returnValue = false) {
+  for (const pattern of patterns) {
+    const res = wildcardMatch(pattern, str, true);
+    if (res) {
+      if (returnValue) {
+        return res;
+      } else {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function shortenToXChars(str, x=100) {
+  const maxLength = x;
+  const dots = '...';
+
+  if (str.length <= maxLength) {
+    return str;
+  }
+
+  const keepLength = maxLength - dots.length;
+  const half = Math.floor(keepLength / 2);
+  
+  const start = str.slice(0, half);
+  const end = str.slice(str.length - (keepLength - half));
+
+  return start + dots + end;
+}

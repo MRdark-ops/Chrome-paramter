@@ -1,0 +1,5 @@
+* [ ] Add other filters: url, parameter, ...
+* [ ] Sorting based on entropy
+* [ ] Crawling Javascript files to find more parameters
+* [ ] Check the head tag too, it is just checking body content.
+* [ ] Adding wildcard instead of absolute url
