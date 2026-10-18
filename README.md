@@ -40,10 +40,6 @@ A relatively powerful tool for discovering potential parameters from a web page.
 * [ ] Check the head tag too, it is just checking body content.
 * [ ] Adding wildcard instead of absolute url
 
-## 🧑‍💻 Author
-
-* MRdark-ops – [@alimehridev](https://github.com/MRdark-ops)
-
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
